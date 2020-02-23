@@ -1,18 +1,32 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class SpawnManager : MonoBehaviour
 {
+	public GameObject playerPrefab;
 	public GameObject enemyPrefab;
+	public int NumberOfBots;
+	
     // Start is called before the first frame update
     void Start()
     {
-		GameObject[] spawnPoints= GameObject.FindGameObjectsWithTag("SpawnPoint");
-		int r = Random.Range(0, spawnPoints.Length);
+		var spawnPoints= GameObject.FindGameObjectsWithTag("SpawnPoint").ToList();
 
-		GameObject.Instantiate<GameObject>(enemyPrefab, spawnPoints[r].transform);
-        
+		//Spawning Player 
+		int r = Random.Range(0, spawnPoints.Count);
+		GameObject.Instantiate<GameObject>(playerPrefab, spawnPoints[r].transform);
+		spawnPoints.RemoveAt(r);
+
+		//Spawning Enemy Bots
+		for (int i=0; i<NumberOfBots; ++i)
+		{
+			r = Random.Range(0, spawnPoints.Count);
+			GameObject.Instantiate<GameObject>(enemyPrefab, spawnPoints[r].transform);
+			spawnPoints.RemoveAt(r);
+		}
+
     }
 
   
